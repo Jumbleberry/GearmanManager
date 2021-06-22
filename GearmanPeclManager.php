@@ -48,7 +48,7 @@ class GearmanPeclManager extends GearmanManager {
         }
 
         foreach($worker_list as $w){
-            $timeout = (isset($timeouts[$w]) ? $timeouts[$w] : null);
+            $timeout = (isset($timeouts[$w]) ? $timeouts[$w] : 120);
             $this->log("Adding job $w ; timeout: " . $timeout, GearmanManager::LOG_LEVEL_WORKER_INFO);
             $thisWorker->addFunction($w, array($this, "do_job"), $this, $timeout);
         }
