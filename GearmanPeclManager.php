@@ -65,7 +65,7 @@ class GearmanPeclManager extends GearmanManager {
 
                 if (!@$thisWorker->wait()){
                     if ($thisWorker->returnCode() == GEARMAN_NO_ACTIVE_FDS){
-                        sleep(5);
+                        usleep(4 + rand(0, 1000));
                     }
                 }
 
@@ -85,6 +85,7 @@ class GearmanPeclManager extends GearmanManager {
                 $this->stop_work = true;
             }
 
+            pcntl_signal_dispatch();
         }
 
         $thisWorker->unregisterAll();

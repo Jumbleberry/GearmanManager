@@ -32,7 +32,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
 **/
-
 declare(ticks = 1);
 
 error_reporting(E_ALL | E_STRICT);
@@ -336,10 +335,12 @@ abstract class GearmanManager {
                 }
             }
 
+            pcntl_signal_dispatch();
+
             /**
              * php will eat up your cpu if you don't have this
              */
-            usleep(10000);
+            usleep(4000 + rand(0, 1000));
 
         }
 
@@ -888,7 +889,7 @@ abstract class GearmanManager {
             /**
              * php will eat up your cpu if you don't have this
              */
-            usleep(50000);
+            usleep(5000);
 
         }
 
@@ -1045,8 +1046,6 @@ abstract class GearmanManager {
      * Handles signals
      */
     public function signal($signo) {
-
-        static $term_count = 0;
 
         if(!$this->isparent){
 
