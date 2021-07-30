@@ -339,7 +339,7 @@ abstract class GearmanManager {
             /**
              * php will eat up your cpu if you don't have this
              */
-            usleep(50000);
+            usleep(10000);
 
         }
 
@@ -352,6 +352,12 @@ abstract class GearmanManager {
     public function __destruct() {
         if($this->isparent){
             if(!empty($this->pid_file) && file_exists($this->pid_file)){
+                $pid = trim(file_get_contents($this->pid_file));
+                if ($this->pid != $pid) {
+                    $this->log("Not removing PID file ($pid) since it is not the current process ({$this->pid_file})", GearmanManager::LOG_LEVEL_PROC_INFO);
+                    return;
+                }
+
                 if(!unlink($this->pid_file)) {
                     $this->log("Could not delete PID file", GearmanManager::LOG_LEVEL_PROC_INFO);
                 }
@@ -809,7 +815,7 @@ abstract class GearmanManager {
         $this->log("Helper is running. Sending continue to $this->parent_pid.", GearmanManager::LOG_LEVEL_DEBUG);
         posix_kill($this->parent_pid, SIGCONT);
 
-        if($this->check_code){
+        if($this->check_code && !$this->stop_work){
             $this->log("Running loop to check for new code", self::LOG_LEVEL_DEBUG);
             $last_check_time = 0;
             while(1) {
@@ -1063,8 +1069,7 @@ abstract class GearmanManager {
                     $this->log("Shutting down...");
                     $this->stop_work = true;
                     $this->stop_time = time();
-                    $term_count++;
-                    if($term_count < 5){
+                    if($signo === SIGINT){
                         $this->stop_children();
                     } else {
                         $this->stop_children(SIGKILL);
