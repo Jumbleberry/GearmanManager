@@ -42,7 +42,7 @@ start()
     -- -P $PIDFILE \
        -l $LOGFILE \
        -u $GEARMANUSER \
-       -e $ENV
+       -e $ENV \
        -d \
        $PARAMS 
   then

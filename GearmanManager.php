@@ -387,7 +387,7 @@ abstract class GearmanManager {
      */
     protected function getopt($config = array()) {
 
-        $opts = getopt("ac:dD:h:Hl:o:p:P:u:v::w:r:x:Z");
+        $opts = getopt("ac:dD:e:h:Hl:o:p:P:u:v::w:r:x:Z");
 
         if(isset($opts["H"])){
             $this->show_help();
@@ -468,6 +468,10 @@ abstract class GearmanManager {
             $this->user = $opts['u'];
         } elseif(isset($this->config["user"])){
             $this->user = $this->config["user"];
+        }
+
+        if (isset($opts['e'])) {
+            putenv("ENV=" . $opts['e']);
         }
 
         /**
