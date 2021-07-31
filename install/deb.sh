@@ -14,16 +14,17 @@
 
 ##PATH##
 DAEMON=/usr/local/bin/gearman-manager
-PIDDIR=/var/run/gearman
+PIDDIR=/run/gearman
 PIDFILE=${PIDDIR}/manager.pid
 LOGFILE=/var/log/gearman-manager.log
 CONFIGDIR=/etc/gearman-manager
-GEARMANUSER="gearman"
+GEARMANUSER="www-data"
 PARAMS="-c ${CONFIGDIR}/config.ini"
 
 test -x ${DAEMON} || exit 0
 
 . /lib/lsb/init-functions
+. /etc/gearman-manager/environment
 
 start()
 {
@@ -36,10 +37,12 @@ start()
   if start-stop-daemon \
     --start \
     --startas $DAEMON \
+    --user $GEARMANUSER \
     --pidfile $PIDFILE \
     -- -P $PIDFILE \
        -l $LOGFILE \
        -u $GEARMANUSER \
+       -e $ENV
        -d \
        $PARAMS 
   then
@@ -57,7 +60,8 @@ stop()
   if start-stop-daemon \
     --stop \
     --oknodo \
-    --retry 20 \
+    --retry INT/60/TERM/1 \
+    --user $GEARMANUSER \
     --pidfile $PIDFILE
   then
     log_end_msg 0
