@@ -340,7 +340,7 @@ abstract class GearmanManager {
             /**
              * php will eat up your cpu if you don't have this
              */
-            usleep(4000 + rand(0, 1000));
+            usleep(10000);
 
         }
 
@@ -889,7 +889,7 @@ abstract class GearmanManager {
             /**
              * php will eat up your cpu if you don't have this
              */
-            usleep(5000);
+            usleep(10000);
 
         }
 

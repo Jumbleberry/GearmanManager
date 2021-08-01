@@ -65,7 +65,7 @@ class GearmanPeclManager extends GearmanManager {
 
                 if (!@$thisWorker->wait()){
                     if ($thisWorker->returnCode() == GEARMAN_NO_ACTIVE_FDS){
-                        usleep(4 + rand(0, 1000));
+                        usleep(1000000 + rand(0, 1000000));
                     }
                 }
 
